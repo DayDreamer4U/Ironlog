@@ -1,0 +1,12 @@
+import React,{useEffect,useState} from 'react';
+import { View,Text,Pressable } from 'react-native';
+import { Timer as TimerIcon,Pause,Play,X } from 'lucide-react-native';
+import { useStore } from '../store';
+import { Button,Sheet,C,s,Field,Chips,IconButton } from './ui';
+export function Timer({compact=false}:{compact?:boolean}){
+  const {state,startRest,stopRest,pauseRest}=useStore();const [open,setOpen]=useState(false),[seconds,setSeconds]=useState('90'),[now,setNow]=useState(Date.now());
+  useEffect(()=>{const id=setInterval(()=>setNow(Date.now()),500);return()=>clearInterval(id);},[]);
+  const timer=state.timer,remaining=timer.endAt?Math.max(0,Math.ceil((timer.endAt-now)/1000)):timer.remaining;
+  const active=!!timer.endAt||remaining>0,time=`${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`;
+  return <><Pressable accessibilityRole="button" accessibilityLabel="Open rest timer" onPress={()=>setOpen(true)} style={[s.row,{backgroundColor:active?'#293326':C.input,paddingHorizontal:12,paddingVertical:9,borderRadius:13}]}><TimerIcon color={C.lime} size={18}/><Text style={[s.h3,{color:C.lime,fontVariant:['tabular-nums']}]}>{active?time:compact?'Rest':'Rest timer'}</Text></Pressable><Sheet visible={open} title="Rest timer" onClose={()=>setOpen(false)}><Text style={[s.title,{textAlign:'center',fontSize:72,color:C.lime,fontVariant:['tabular-nums']}]}>{time}</Text><Text style={[s.muted,{textAlign:'center'}]}>{timer.label}{timer.endAt&&remaining===0?' · Rest complete':''}</Text><View style={[s.row,{justifyContent:'center'}]}>{timer.endAt?<Button title="Pause" icon={<Pause size={18}/>} onPress={()=>void pauseRest()}/>:remaining>0?<Button title="Resume" icon={<Play size={18}/>} onPress={()=>void startRest(remaining,timer.label)}/>:null}<Button title="Reset" secondary onPress={()=>void stopRest()}/></View><Text style={s.label}>Quick start</Text><Chips options={[30,60,90,120,180].map(v=>({value:String(v),label:`${v}s`}))} value={seconds} onChange={setSeconds}/><Field label="Custom duration (seconds)" value={seconds} onChange={setSeconds} number/><Button title="Start rest" onPress={()=>{const n=Number(seconds);if(n>=1&&n<=3600)void startRest(Math.round(n));}} disabled={!(Number(seconds)>=1&&Number(seconds)<=3600)}/><Text style={s.muted}>The countdown uses the actual finish time, including time spent with the screen locked. Android notification permission is needed for alerts. Battery restrictions can delay alerts; allow this app to run without battery restrictions if needed.</Text></Sheet></>;
+}

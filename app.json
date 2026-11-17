@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Ironlog",
+    "slug": "ironlog",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "android": {
+      "package": "com.ironlog.personal",
+      "versionCode": 1,
+      "allowBackup": false,
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "VIBRATE",
+        "SCHEDULE_EXACT_ALARM"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_MEDIA_AUDIO"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#10131B"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Ironlog Preview"
+    },
+    "plugins": [
+      "expo-sharing",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "color": "#D9FA68"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose a machine photo for your personal exercise library.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "platforms": [
+      "android",
+      "web"
+    ],
+    "scheme": "ironlog",
+    "updates": {
+      "enabled": false
+    }
+  }
+}
